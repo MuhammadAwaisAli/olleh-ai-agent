@@ -37,6 +37,33 @@
   btn.onpointerup = function () { btn.style.transform = 'scale(1)'; };
   btn.onclick = toggleModal;
   btn.innerHTML = '<svg viewBox="0 0 640 640" width="28" height="28" fill="currentColor" aria-hidden="true"><path d="M320 64C267 64 224 107 224 160L224 288C224 341 267 384 320 384C373 384 416 341 416 288L416 160C416 107 373 64 320 64zM176 248C176 234.7 165.3 224 152 224C138.7 224 128 234.7 128 248L128 288C128 385.9 201.3 466.7 296 478.5L296 528L248 528C234.7 528 224 538.7 224 552C224 565.3 234.7 576 248 576L392 576C405.3 576 416 565.3 416 552C416 538.7 405.3 528 392 528L344 528L344 478.5C438.7 466.7 512 385.9 512 288L512 248C512 234.7 501.3 224 488 224C474.7 224 464 234.7 464 248L464 288C464 367.5 399.5 432 320 432C240.5 432 176 367.5 176 288L176 248z"/></svg>';
+  // give the button a class for styling
+btn.className = (btn.className ? btn.className + ' ' : '') + 'olleh-mic-btn';
+
+// inject beat animation styles once
+if (!d.getElementById('olleh-mic-anim')) {
+  var st = d.createElement('style');
+  st.id = 'olleh-mic-anim';
+  st.textContent = `
+    .olleh-mic-btn{ position:fixed; } /* keeps existing inline position, just a safety */
+    .olleh-mic-btn::after{
+      content:"";
+      position:absolute;
+      inset:-6px;
+      border-radius:9999px;
+      pointer-events:none;
+      box-shadow:0 0 0 0 rgba(59,130,246,0.55);
+      animation:ollehBeat 1.6s ease-out infinite;
+    }
+    @keyframes ollehBeat{
+      0%   { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.55); }
+      60%  { transform:scale(1.08); box-shadow:0 0 0 14px rgba(59,130,246,0.00); }
+      100% { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.00); }
+    }
+  `;
+  d.head.appendChild(st);
+}
+
   d.body.appendChild(btn);
 
   // caption under the mic, plain text
