@@ -3,13 +3,13 @@
   var script = d.currentScript || (function(){ var s=d.getElementsByTagName('script'); return s[s.length-1]; })();
 
   var cfg = {
-    iframeSrc:"https://olleh.ai/demo?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0NTQsIm5hbWUiOiJMb2dhbiBDb250cmVyYXMiLCJlbWFpbCI6ImZpY3VwdWh5QG1haWxpbmF0b3IuY29tIiwicGhvbmUiOiIxODA3MTg1OTg0OSIsImxhbmd1YWdlIjoiZW4ifSwiaWF0IjoxNzU1Nzg0NzIxLCJleHAiOjE3NTU4NzExMjF9.hukYNfHqykWc7si26o9J-JU-MhwcV9TjjVU0cKolPC0",        // full url, include token if needed
+    iframeSrc:script?.dataset.ollehIframeSrc || "",        // full url, include token if needed
     autostart: String(script?.dataset.ollehAutostart || "false") === "true",
     allow: script?.dataset.ollehAllow || "microphone; camera; autoplay",
     sandbox: script?.dataset.ollehSandbox || "allow-scripts allow-forms allow-same-origin allow-presentation"
   };
 
-  if (w.__OLLEH_EMBED_ACTIVE__) return;   // avoid double init
+  if (w.__OLLEH_EMBED_ACTIVE__) return;
   w.__OLLEH_EMBED_ACTIVE__ = true;
 
   var listeners = { open: [], close: [] };
@@ -39,6 +39,25 @@
   btn.innerHTML = '<svg viewBox="0 0 640 640" width="28" height="28" fill="currentColor" aria-hidden="true"><path d="M320 64C267 64 224 107 224 160L224 288C224 341 267 384 320 384C373 384 416 341 416 288L416 160C416 107 373 64 320 64zM176 248C176 234.7 165.3 224 152 224C138.7 224 128 234.7 128 248L128 288C128 385.9 201.3 466.7 296 478.5L296 528L248 528C234.7 528 224 538.7 224 552C224 565.3 234.7 576 248 576L392 576C405.3 576 416 565.3 416 552C416 538.7 405.3 528 392 528L344 528L344 478.5C438.7 466.7 512 385.9 512 288L512 248C512 234.7 501.3 224 488 224C474.7 224 464 234.7 464 248L464 288C464 367.5 399.5 432 320 432C240.5 432 176 367.5 176 288L176 248z"/></svg>';
   d.body.appendChild(btn);
 
+  // caption under mic
+  var cap = d.createElement('div');
+  cap.textContent = 'Powered by Olleh AI';
+  Object.assign(cap.style, {
+    position:'fixed',
+    right:'24px',
+    bottom:'86px', /* 56 button + 6 gap + 24 base */
+    fontSize:'11px',
+    lineHeight:'1',
+    color:'rgba(0,0,0,0.65)',
+    background:'rgba(255,255,255,0.85)',
+    padding:'6px 8px',
+    borderRadius:'8px',
+    boxShadow:'0 2px 10px rgba(0,0,0,0.12)',
+    userSelect:'none',
+    zIndex:'2147483000'
+  });
+  d.body.appendChild(cap);
+
   // scrim
   var scrim = d.createElement('div');
   Object.assign(scrim.style, {
@@ -55,16 +74,24 @@
   modal.tabIndex = -1;
   Object.assign(modal.style, {
     position:'fixed', right:'16px', bottom:'96px', width:'26rem', maxWidth:'calc(100vw - 24px)',
-    maxHeight:'80vh', background:'#fff', borderRadius:'16px', boxShadow:'0 20px 50px rgba(0,0,0,0.25)',
-    border:'1px solid #e5e7eb', overflow:'hidden', transform:'translateY(24px)', opacity:'0',
+    maxHeight:'80vh',
+    background:'transparent',          /* remove white background behind iframe */
+    borderRadius:'16px',
+    boxShadow:'0 20px 50px rgba(0,0,0,0.25)',
+    border:'0',                        /* remove white border */
+    overflow:'hidden',
+    transform:'translateY(24px)', opacity:'0',
     transition:'transform 200ms ease, opacity 200ms ease', zIndex:'2147483000'
   });
   d.body.appendChild(modal);
 
   // header
   var header = d.createElement('div');
-  Object.assign(header.style, { display:'flex', alignItems:'center', justifyContent:'space-between',
-    padding:'10px 12px', background:'linear-gradient(90deg,#22c55e,#10b981)', color:'#fff' });
+  Object.assign(header.style, {
+    display:'flex', alignItems:'center', justifyContent:'space-between',
+    padding:'10px 12px', background:'linear-gradient(90deg,#22c55e,#10b981)', color:'#fff',
+    borderTopLeftRadius:'16px', borderTopRightRadius:'16px'
+  });
   var title = d.createElement('span'); title.textContent = 'Olleh AI Assistant';
   var closeBtn = d.createElement('button'); closeBtn.type='button'; closeBtn.setAttribute('aria-label','Close');
   Object.assign(closeBtn.style, { padding:'6px', border:'0', background:'transparent', color:'#fff', cursor:'pointer' });
@@ -74,12 +101,25 @@
 
   // body with iframe
   var frameWrap = d.createElement('div');
-  Object.assign(frameWrap.style, { position:'relative', width:'100%', height:'65vh', maxHeight:'calc(80vh - 44px)' });
+  Object.assign(frameWrap.style, {
+    position:'relative', width:'100%', height:'65vh', maxHeight:'calc(80vh - 44px)',
+    overflow:'hidden',               /* clip any inner edges */
+    borderBottomLeftRadius:'16px', borderBottomRightRadius:'16px',
+    background:'transparent'
+  });
   modal.appendChild(frameWrap);
 
   var iframe = d.createElement('iframe');
   iframe.title = 'Olleh AI';
-  Object.assign(iframe.style, { width:'100%', height:'100%', border:'0' });
+  // hide the internal white gutter and scroll track by oversizing and shifting
+  Object.assign(iframe.style, {
+    position:'absolute',
+    top:'-8px', left:'-8px',
+    width:'calc(100% + 16px)',
+    height:'calc(100% + 16px)',
+    border:'0',
+    display:'block'
+  });
   iframe.allow = cfg.allow;
   iframe.sandbox = cfg.sandbox;
   frameWrap.appendChild(iframe);
@@ -105,7 +145,7 @@
     scrim.style.opacity = '0'; scrim.style.pointerEvents = 'none';
     modal.style.opacity = '0'; modal.style.transform = 'translateY(24px)';
     d.body.style.overflow = '';
-    // iframe.src = 'about:blank';  // uncomment if you want hard stop
+    // iframe.src = 'about:blank';
     try{ lastActive && lastActive.focus && lastActive.focus(); }catch(e){}
     emit('close');
   }
