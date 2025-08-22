@@ -108,7 +108,7 @@ function positionCaption(){
   if (isOpen) {
     // keep your current good placement when open
     var gap = 14;
-    cap.style.bottom = (w.innerHeight - (b.top + b.height) + gap) + 'px';
+    cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
   } else {
     // move a bit more down under the icon
     var offsetDown = 14;   // try 12, increase to 14 or 16 if you want lower
