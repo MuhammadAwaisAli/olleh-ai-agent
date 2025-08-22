@@ -29,8 +29,8 @@
   btn.setAttribute('aria-label', 'Open Olleh AI Assistant');
   Object.assign(btn.style, {
     position: 'fixed', right: '24px', bottom: '24px', width: '56px', height: '56px',
-    borderRadius: '9999px', border: '0', cursor: 'pointer', color: '#fff',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.25)', background:'transparent',
+    borderRadius: '9999px', border: '0', cursor: 'pointer',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 120ms ease',
     zIndex: '2147483000'
   });
@@ -73,9 +73,9 @@ if (!d.getElementById('olleh-mic-anim')) {
       pointer-events:none;
     }
     @keyframes ollehBeat{
-0%   { transform:scale(1);    /* remove box-shadow here */ }
-60%  { transform:scale(1.08); /* remove box-shadow here */ }
-100% { transform:scale(1);    /* already 0, can delete whole block */ }
+      0%   { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.55); }
+      60%  { transform:scale(1.08); box-shadow:0 0 0 14px rgba(59,130,246,0.00); }
+      100% { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.00); }
     }
   `;
   d.head.appendChild(st);
