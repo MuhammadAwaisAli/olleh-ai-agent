@@ -79,7 +79,7 @@
   modal.setAttribute('aria-label', 'Olleh AI Assistant');
   modal.tabIndex = -1;
   Object.assign(modal.style, {
-    position:'fixed', right:'16px', bottom:'96px', width:'24rem', maxWidth:'calc(100vw - 24px)',
+    position:'fixed', right:'16px', bottom:'96px', width:'22rem', maxWidth:'calc(100vw - 24px)',
     maxHeight:'80vh',
     background:'transparent',      // no white background
     borderRadius:'16px',
