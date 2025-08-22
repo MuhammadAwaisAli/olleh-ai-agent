@@ -95,7 +95,7 @@
   var header = d.createElement('div');
   Object.assign(header.style, {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    padding: '10px 12px', background: 'linear-gradient(90deg, rgba(7,152,228,0.8), rgb(7,152,228),  rgba(7,152,228,0.6))', color: '#fff',
+    padding: '10px 12px', background: 'linear-gradient(90deg, rgb(5,120,190),rgb(7,152,228),rgb(9,180,255) )', color: '#fff',
     borderTopLeftRadius: '16px', borderTopRightRadius: '16px'
   });
   var title = d.createElement('span'); title.textContent = 'Olleh AI Assistant';
