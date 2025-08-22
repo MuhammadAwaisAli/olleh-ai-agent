@@ -81,13 +81,21 @@ if (!d.getElementById('olleh-mic-anim')) {
     zIndex: '2147483000'
   });
   d.body.appendChild(cap);
-  function positionCaption() {
-    var micCenterX = w.innerWidth - 24 - 28; // right gap 24, half of 56
-    var rect = cap.getBoundingClientRect();
-    var left = micCenterX - rect.width / 2;
-    left = Math.max(8, Math.min(left, w.innerWidth - rect.width - 6));
-    cap.style.left = left + 'px';
-  }
+  function positionCaption(){
+  // mic button box, accurate even with the pulse ring
+  var b = btn.getBoundingClientRect();
+  var capRect = cap.getBoundingClientRect();
+
+  // center under mic
+  var left = b.left + b.width / 2 - capRect.width / 2;
+  left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
+  cap.style.left = left + 'px';
+
+  // sit just below the mic, small gap
+  var gap = 6; // px
+  var bottom = w.innerHeight - (b.top + b.height) + gap;
+  cap.style.bottom = bottom + 'px';
+}
   positionCaption();
   w.addEventListener('resize', positionCaption);
 
