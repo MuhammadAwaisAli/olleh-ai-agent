@@ -29,7 +29,7 @@
   Object.assign(btn.style, {
     position: 'fixed', right: '24px', bottom: '24px', width: '56px', height: '56px',
     borderRadius: '9999px', border: '0', cursor: 'pointer', color: '#fff',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.25)', background: 'linear-gradient(90deg,#9333ea,#3b82f6)',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.25)', background:'transparent',
     display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 120ms ease',
     zIndex: '2147483000'
   });
@@ -48,7 +48,7 @@ var iconUrl = script?.dataset.ollehIconSource
 
 // swap mic to your svg file, only markup change, logic unchanged
 btn.innerHTML = '<img src="' + iconUrl + '" alt="" aria-hidden="true" ' +
-                'style="width:28px;height:28px;display:block;pointer-events:none;" />';
+                'style="width:35px;height:35px;display:block;pointer-events:none;" />';
   // give the button a class for styling
 btn.className = (btn.className ? btn.className + ' ' : '') + 'olleh-mic-btn';
   
@@ -70,13 +70,11 @@ if (!d.getElementById('olleh-mic-anim')) {
       inset:-6px;
       border-radius:9999px;
       pointer-events:none;
-      box-shadow:0 0 0 0 rgba(59,130,246,0.55);
-      animation:ollehBeat 1.6s ease-out infinite;
     }
     @keyframes ollehBeat{
-      0%   { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.55); }
-      60%  { transform:scale(1.08); box-shadow:0 0 0 14px rgba(59,130,246,0.00); }
-      100% { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.00); }
+0%   { transform:scale(1);    /* remove box-shadow here */ }
+60%  { transform:scale(1.08); /* remove box-shadow here */ }
+100% { transform:scale(1);    /* already 0, can delete whole block */ }
     }
   `;
   d.head.appendChild(st);
