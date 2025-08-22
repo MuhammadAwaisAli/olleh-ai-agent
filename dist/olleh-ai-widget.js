@@ -45,7 +45,7 @@
   Object.assign(cap.style, {
     position:'fixed',
     bottom:'4px',
-    marginBottom:'-4px',                 // sits under the mic
+    marginBottom:'-2px',                 // sits under the mic
     fontSize:'8px',
     lineHeight:'1',
     color:'rgba(0,0,0,0.75)',
@@ -58,7 +58,7 @@
     var micCenterX = w.innerWidth - 24 - 28; // right gap 24, half of 56
     var rect = cap.getBoundingClientRect();
     var left = micCenterX - rect.width / 2;
-    left = Math.max(8, Math.min(left, w.innerWidth - rect.width - 8));
+    left = Math.max(8, Math.min(left, w.innerWidth - rect.width - 9));
     cap.style.left = left + 'px';
   }
   positionCaption();
