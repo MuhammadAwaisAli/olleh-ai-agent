@@ -3,7 +3,7 @@
   var script = d.currentScript || (function(){ var s=d.getElementsByTagName('script'); return s[s.length-1]; })();
 
   var cfg = {
-    iframeSrc:"https://olleh.ai/demo?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0NTQsIm5hbWUiOiJMb2dhbiBDb250cmVyYXMiLCJlbWFpbCI6ImZpY3VwdWh5QG1haWxpbmF0b3IuY29tIiwicGhvbmUiOiIxODA3MTg1OTg0OSIsImxhbmd1YWdlIjoiZW4ifSwiaWF0IjoxNzU1Nzg0NzIxLCJleHAiOjE3NTU4NzExMjF9.hukYNfHqykWc7si26o9J-JU-MhwcV9TjjVU0cKolPC0",
+    iframeSrc:script?.dataset.ollehIframeSrc || "",
     autostart: String(script?.dataset.ollehAutostart || "false") === "true",
     allow: script?.dataset.ollehAllow || "microphone; camera; autoplay",
     sandbox: script?.dataset.ollehSandbox || "allow-scripts allow-forms allow-same-origin allow-presentation"
