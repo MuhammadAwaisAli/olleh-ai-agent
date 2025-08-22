@@ -100,20 +100,22 @@ function positionCaption(){
   var b = btn.getBoundingClientRect();
   var capRect = cap.getBoundingClientRect();
 
-  // center horizontally over the mic
+  // center horizontally
   var left = b.left + b.width / 2 - capRect.width / 2;
   left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
   cap.style.left = left + 'px';
 
-  // vertical, inside the circle when closed, just below when open
   if (isOpen) {
-    var gap = 6; // below the mic, your current good state
+    // keep your current good placement when open
+    var gap = 6;
     cap.style.bottom = (w.innerHeight - (b.top + b.height) + gap) + 'px';
   } else {
-    var inset = 6; // a few px inside the button
-    cap.style.bottom = (w.innerHeight - (b.top + b.height - inset)) + 'px';
+    // move a bit more down under the icon
+    var offsetDown = 12;   // try 12, increase to 14 or 16 if you want lower
+    cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
   }
 }
+
 
   positionCaption();
   w.addEventListener('resize', positionCaption);
