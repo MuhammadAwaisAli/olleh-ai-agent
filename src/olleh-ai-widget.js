@@ -6,7 +6,8 @@
     iframeSrc: script?.dataset.ollehIframeSrc || "",
     autostart: String(script?.dataset.ollehAutostart || "false") === "true",
     allow: script?.dataset.ollehAllow || "microphone; camera; autoplay",
-    sandbox: script?.dataset.ollehSandbox || "allow-scripts allow-forms allow-same-origin allow-presentation"
+    sandbox: script?.dataset.ollehSandbox || "allow-scripts allow-forms allow-same-origin allow-presentation",
+    iconSaurce: script?.dataset.ollehIconSource || "https://olleh.ai/assets/olleh-icon.svg"
   };
 
   if (w.__OLLEH_EMBED_ACTIVE__) return;
