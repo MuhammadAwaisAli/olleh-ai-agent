@@ -81,21 +81,40 @@ if (!d.getElementById('olleh-mic-anim')) {
     zIndex: '2147483000'
   });
   d.body.appendChild(cap);
-  function positionCaption(){
-  // mic button box, accurate even with the pulse ring
+//   function positionCaption(){
+//   // mic button box, accurate even with the pulse ring
+//   var b = btn.getBoundingClientRect();
+//   var capRect = cap.getBoundingClientRect();
+
+//   // center under mic
+//   var left = b.left + b.width / 2 - capRect.width / 2;
+//   left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
+//   cap.style.left = left + 'px';
+
+//   // sit just below the mic, small gap
+//   var gap = 6; // px
+//   var bottom = w.innerHeight - (b.top + b.height) + gap;
+//   cap.style.bottom = bottom + 'px';
+// }
+function positionCaption(){
   var b = btn.getBoundingClientRect();
   var capRect = cap.getBoundingClientRect();
 
-  // center under mic
+  // center horizontally over the mic
   var left = b.left + b.width / 2 - capRect.width / 2;
   left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
   cap.style.left = left + 'px';
 
-  // sit just below the mic, small gap
-  var gap = 6; // px
-  var bottom = w.innerHeight - (b.top + b.height) + gap;
-  cap.style.bottom = bottom + 'px';
+  // vertical, inside the circle when closed, just below when open
+  if (isOpen) {
+    var gap = 6; // below the mic, your current good state
+    cap.style.bottom = (w.innerHeight - (b.top + b.height) + gap) + 'px';
+  } else {
+    var inset = 6; // a few px inside the button
+    cap.style.bottom = (w.innerHeight - (b.top + b.height - inset)) + 'px';
+  }
 }
+
   positionCaption();
   w.addEventListener('resize', positionCaption);
 
@@ -177,6 +196,7 @@ if (!d.getElementById('olleh-mic-anim')) {
     if (cfg.iframeSrc) iframe.src = cfg.iframeSrc;
     focusLater(modal);
     emit('open');
+     positionCaption();
   }
   function closeModal() {
     if (!isOpen) return;
@@ -187,6 +207,7 @@ if (!d.getElementById('olleh-mic-anim')) {
     d.body.style.overflow = '';
     try { lastActive && lastActive.focus && lastActive.focus(); } catch (e) { }
     emit('close');
+     positionCaption();
   }
   function toggleModal() { isOpen ? closeModal() : openModal(); }
   function focusLater(el) { setTimeout(function () { try { el.focus(); } catch (e) { } }, 0); }
