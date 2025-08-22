@@ -3,7 +3,7 @@
   var script = d.currentScript || (function(){ var s=d.getElementsByTagName('script'); return s[s.length-1]; })();
 
   var cfg = {
-    iframeSrc:script?.dataset.ollehIframeSrc || "",        // full url, include token if needed
+    iframeSrc:"https://olleh.ai/demo?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0NTQsIm5hbWUiOiJMb2dhbiBDb250cmVyYXMiLCJlbWFpbCI6ImZpY3VwdWh5QG1haWxpbmF0b3IuY29tIiwicGhvbmUiOiIxODA3MTg1OTg0OSIsImxhbmd1YWdlIjoiZW4ifSwiaWF0IjoxNzU1Nzg0NzIxLCJleHAiOjE3NTU4NzExMjF9.hukYNfHqykWc7si26o9J-JU-MhwcV9TjjVU0cKolPC0",
     autostart: String(script?.dataset.ollehAutostart || "false") === "true",
     allow: script?.dataset.ollehAllow || "microphone; camera; autoplay",
     sandbox: script?.dataset.ollehSandbox || "allow-scripts allow-forms allow-same-origin allow-presentation"
@@ -39,24 +39,29 @@
   btn.innerHTML = '<svg viewBox="0 0 640 640" width="28" height="28" fill="currentColor" aria-hidden="true"><path d="M320 64C267 64 224 107 224 160L224 288C224 341 267 384 320 384C373 384 416 341 416 288L416 160C416 107 373 64 320 64zM176 248C176 234.7 165.3 224 152 224C138.7 224 128 234.7 128 248L128 288C128 385.9 201.3 466.7 296 478.5L296 528L248 528C234.7 528 224 538.7 224 552C224 565.3 234.7 576 248 576L392 576C405.3 576 416 565.3 416 552C416 538.7 405.3 528 392 528L344 528L344 478.5C438.7 466.7 512 385.9 512 288L512 248C512 234.7 501.3 224 488 224C474.7 224 464 234.7 464 248L464 288C464 367.5 399.5 432 320 432C240.5 432 176 367.5 176 288L176 248z"/></svg>';
   d.body.appendChild(btn);
 
-  // caption under mic
+  // caption under the mic, plain text
   var cap = d.createElement('div');
   cap.textContent = 'Powered by Olleh AI';
   Object.assign(cap.style, {
     position:'fixed',
-    right:'24px',
-    bottom:'86px', /* 56 button + 6 gap + 24 base */
+    bottom:'4px',                 // sits under the mic
     fontSize:'11px',
     lineHeight:'1',
-    color:'rgba(0,0,0,0.65)',
-    background:'rgba(255,255,255,0.85)',
-    padding:'6px 8px',
-    borderRadius:'8px',
-    boxShadow:'0 2px 10px rgba(0,0,0,0.12)',
+    color:'rgba(0,0,0,0.75)',
     userSelect:'none',
+    pointerEvents:'none',         // never blocks clicks
     zIndex:'2147483000'
   });
   d.body.appendChild(cap);
+  function positionCaption(){
+    var micCenterX = w.innerWidth - 24 - 28; // right gap 24, half of 56
+    var rect = cap.getBoundingClientRect();
+    var left = micCenterX - rect.width / 2;
+    left = Math.max(8, Math.min(left, w.innerWidth - rect.width - 8));
+    cap.style.left = left + 'px';
+  }
+  positionCaption();
+  w.addEventListener('resize', positionCaption);
 
   // scrim
   var scrim = d.createElement('div');
@@ -75,10 +80,10 @@
   Object.assign(modal.style, {
     position:'fixed', right:'16px', bottom:'96px', width:'26rem', maxWidth:'calc(100vw - 24px)',
     maxHeight:'80vh',
-    background:'transparent',          /* remove white background behind iframe */
+    background:'transparent',      // no white background
     borderRadius:'16px',
     boxShadow:'0 20px 50px rgba(0,0,0,0.25)',
-    border:'0',                        /* remove white border */
+    border:'0',                    // remove border
     overflow:'hidden',
     transform:'translateY(24px)', opacity:'0',
     transition:'transform 200ms ease, opacity 200ms ease', zIndex:'2147483000'
@@ -103,7 +108,7 @@
   var frameWrap = d.createElement('div');
   Object.assign(frameWrap.style, {
     position:'relative', width:'100%', height:'65vh', maxHeight:'calc(80vh - 44px)',
-    overflow:'hidden',               /* clip any inner edges */
+    overflow:'hidden',
     borderBottomLeftRadius:'16px', borderBottomRightRadius:'16px',
     background:'transparent'
   });
@@ -111,7 +116,6 @@
 
   var iframe = d.createElement('iframe');
   iframe.title = 'Olleh AI';
-  // hide the internal white gutter and scroll track by oversizing and shifting
   Object.assign(iframe.style, {
     position:'absolute',
     top:'-8px', left:'-8px',
@@ -145,7 +149,6 @@
     scrim.style.opacity = '0'; scrim.style.pointerEvents = 'none';
     modal.style.opacity = '0'; modal.style.transform = 'translateY(24px)';
     d.body.style.overflow = '';
-    // iframe.src = 'about:blank';
     try{ lastActive && lastActive.focus && lastActive.focus(); }catch(e){}
     emit('close');
   }
