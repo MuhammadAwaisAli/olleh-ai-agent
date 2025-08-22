@@ -73,7 +73,7 @@ if (!d.getElementById('olleh-mic-anim')) {
     position: 'fixed',
     bottom: '4px',                 // sits under the mic
     fontSize: '8px',
-    marginBottom: '-2px',
+    marginBottom: '2px',
     lineHeight: '1',
     color: 'rgba(0,0,0,0.75)',
     userSelect: 'none',
@@ -85,7 +85,7 @@ if (!d.getElementById('olleh-mic-anim')) {
     var micCenterX = w.innerWidth - 24 - 28; // right gap 24, half of 56
     var rect = cap.getBoundingClientRect();
     var left = micCenterX - rect.width / 2;
-    left = Math.max(8, Math.min(left, w.innerWidth - rect.width - 9));
+    left = Math.max(8, Math.min(left, w.innerWidth - rect.width - 7));
     cap.style.left = left + 'px';
   }
   positionCaption();
