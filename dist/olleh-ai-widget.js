@@ -44,8 +44,9 @@
   cap.textContent = 'Powered by Olleh AI';
   Object.assign(cap.style, {
     position:'fixed',
-    bottom:'4px',                 // sits under the mic
-    fontSize:'11px',
+    bottom:'4px',
+    marginBottom:'-4px',                 // sits under the mic
+    fontSize:'8px',
     lineHeight:'1',
     color:'rgba(0,0,0,0.75)',
     userSelect:'none',

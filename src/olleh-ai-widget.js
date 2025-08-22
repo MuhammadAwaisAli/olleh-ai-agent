@@ -45,7 +45,8 @@
   Object.assign(cap.style, {
     position:'fixed',
     bottom:'4px',                 // sits under the mic
-    fontSize:'11px',
+    fontSize:'8px',
+    marginBottom:'-4px',
     lineHeight:'1',
     color:'rgba(0,0,0,0.75)',
     userSelect:'none',
