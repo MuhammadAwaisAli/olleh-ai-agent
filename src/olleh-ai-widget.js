@@ -71,6 +71,8 @@ if (!d.getElementById('olleh-mic-anim')) {
       inset:-6px;
       border-radius:9999px;
       pointer-events:none;
+      box-shadow: 0 0 0 0 rgba(59,130,246,0.55);
+animation: ollehBeat 1.6s ease-out infinite;
     }
     @keyframes ollehBeat{
       0%   { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.55); }

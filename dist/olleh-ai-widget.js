@@ -37,32 +37,32 @@
   btn.onpointerup = function () { btn.style.transform = 'scale(1)'; };
   btn.onclick = toggleModal;
   // btn.innerHTML = '<svg viewBox="0 0 640 640" width="28" height="28" fill="currentColor" aria-hidden="true"><path d="M320 64C267 64 224 107 224 160L224 288C224 341 267 384 320 384C373 384 416 341 416 288L416 160C416 107 373 64 320 64zM176 248C176 234.7 165.3 224 152 224C138.7 224 128 234.7 128 248L128 288C128 385.9 201.3 466.7 296 478.5L296 528L248 528C234.7 528 224 538.7 224 552C224 565.3 234.7 576 248 576L392 576C405.3 576 416 565.3 416 552C416 538.7 405.3 528 392 528L344 528L344 478.5C438.7 466.7 512 385.9 512 288L512 248C512 234.7 501.3 224 488 224C474.7 224 464 234.7 464 248L464 288C464 367.5 399.5 432 320 432C240.5 432 176 367.5 176 288L176 248z"/></svg>';
-  
+
   var base = new URL(script.src, location.href);
-base.pathname = base.pathname.replace(/[^/]+$/, ""); // remove filename from path
+  base.pathname = base.pathname.replace(/[^/]+$/, ""); // remove filename from path
 
-// use data-olleh-icon-source if provided, else cfg.iconSaurce, else a file next to your script
-var iconUrl = script?.dataset.ollehIconSource
-  || cfg.iconSaurce
-  || new URL("olleh-mic.svg", base).href;
+  // use data-olleh-icon-source if provided, else cfg.iconSaurce, else a file next to your script
+  var iconUrl = script?.dataset.ollehIconSource
+    || cfg.iconSaurce
+    || new URL("olleh-mic.svg", base).href;
 
-// swap mic to your svg file, only markup change, logic unchanged
-btn.innerHTML = '<img src="' + iconUrl + '" alt="" aria-hidden="true" ' +
-                'style="width:35px;height:35px;display:block;pointer-events:none;" />';
+  // swap mic to your svg file, only markup change, logic unchanged
+  btn.innerHTML = '<img src="' + iconUrl + '" alt="" aria-hidden="true" ' +
+    'style="width:35px;height:35px;display:block;pointer-events:none;" />';
   // give the button a class for styling
-btn.className = (btn.className ? btn.className + ' ' : '') + 'olleh-mic-btn';
-  
-  
-  
-  
-  // give the button a class for styling
-btn.className = (btn.className ? btn.className + ' ' : '') + 'olleh-mic-btn';
+  btn.className = (btn.className ? btn.className + ' ' : '') + 'olleh-mic-btn';
 
-// inject beat animation styles once
-if (!d.getElementById('olleh-mic-anim')) {
-  var st = d.createElement('style');
-  st.id = 'olleh-mic-anim';
-  st.textContent = `
+
+
+
+  // give the button a class for styling
+  btn.className = (btn.className ? btn.className + ' ' : '') + 'olleh-mic-btn';
+
+  // inject beat animation styles once
+  if (!d.getElementById('olleh-mic-anim')) {
+    var st = d.createElement('style');
+    st.id = 'olleh-mic-anim';
+    st.textContent = `
     .olleh-mic-btn{ position:fixed; } /* keeps existing inline position, just a safety */
     .olleh-mic-btn::after{
       content:"";
@@ -70,6 +70,8 @@ if (!d.getElementById('olleh-mic-anim')) {
       inset:-6px;
       border-radius:9999px;
       pointer-events:none;
+      box-shadow: 0 0 0 0 rgba(59,130,246,0.55);
+animation: ollehBeat 1.6s ease-out infinite;
     }
     @keyframes ollehBeat{
       0%   { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.55); }
@@ -77,8 +79,8 @@ if (!d.getElementById('olleh-mic-anim')) {
       100% { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.00); }
     }
   `;
-  d.head.appendChild(st);
-}
+    d.head.appendChild(st);
+  }
 
   d.body.appendChild(btn);
 
@@ -97,40 +99,40 @@ if (!d.getElementById('olleh-mic-anim')) {
     zIndex: '2147483000'
   });
   d.body.appendChild(cap);
-//   function positionCaption(){
-//   // mic button box, accurate even with the pulse ring
-//   var b = btn.getBoundingClientRect();
-//   var capRect = cap.getBoundingClientRect();
+  //   function positionCaption(){
+  //   // mic button box, accurate even with the pulse ring
+  //   var b = btn.getBoundingClientRect();
+  //   var capRect = cap.getBoundingClientRect();
 
-//   // center under mic
-//   var left = b.left + b.width / 2 - capRect.width / 2;
-//   left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
-//   cap.style.left = left + 'px';
+  //   // center under mic
+  //   var left = b.left + b.width / 2 - capRect.width / 2;
+  //   left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
+  //   cap.style.left = left + 'px';
 
-//   // sit just below the mic, small gap
-//   var gap = 6; // px
-//   var bottom = w.innerHeight - (b.top + b.height) + gap;
-//   cap.style.bottom = bottom + 'px';
-// }
-function positionCaption(){
-  var b = btn.getBoundingClientRect();
-  var capRect = cap.getBoundingClientRect();
+  //   // sit just below the mic, small gap
+  //   var gap = 6; // px
+  //   var bottom = w.innerHeight - (b.top + b.height) + gap;
+  //   cap.style.bottom = bottom + 'px';
+  // }
+  function positionCaption() {
+    var b = btn.getBoundingClientRect();
+    var capRect = cap.getBoundingClientRect();
 
-  // center horizontally
-  var left = b.left + b.width / 2 - capRect.width / 2;
-  left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
-  cap.style.left = left + 'px';
+    // center horizontally
+    var left = b.left + b.width / 2 - capRect.width / 2;
+    left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
+    cap.style.left = left + 'px';
 
-  if (isOpen) {
-    // keep your current good placement when open
-    var gap = 14;
-    cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
-  } else {
-    // move a bit more down under the icon
-    var offsetDown = 14;   // try 12, increase to 14 or 16 if you want lower
-    cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
+    if (isOpen) {
+      // keep your current good placement when open
+      var gap = 14;
+      cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
+    } else {
+      // move a bit more down under the icon
+      var offsetDown = 14;   // try 12, increase to 14 or 16 if you want lower
+      cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
+    }
   }
-}
 
 
   positionCaption();
@@ -238,7 +240,7 @@ function positionCaption(){
       e.stopPropagation();
       // do nothing, modal stays open
     }
-     
+
   });
 
   // disable Esc close
