@@ -125,11 +125,11 @@ animation: ollehBeat 1.6s ease-out infinite;
 
     if (isOpen) {
       // keep your current good placement when open
-      var gap = 14;
+      var gap = 16;
       cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
     } else {
       // move a bit more down under the icon
-      var offsetDown = 14;   // try 12, increase to 14 or 16 if you want lower
+      var offsetDown = 16;   // try 12, increase to 14 or 16 if you want lower
       cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
     }
   }
