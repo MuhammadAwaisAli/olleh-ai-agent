@@ -235,7 +235,7 @@ function fetchSessionToken(endpoint, clientToken, sessionId){
     function postJson(){
       return fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', "allow-origin": location.origin || "" },
         body: JSON.stringify(payload)
       });
     }
