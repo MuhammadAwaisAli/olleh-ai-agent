@@ -11,7 +11,7 @@
 
     // client token and endpoint for session token
     clientToken: script?.dataset.ollehClientToken || script?.dataset.ollehToken || "",
-    sessionEndpoint: script?.dataset.ollehSessionEndpoint || "https://olleh.ai/user/session-token"
+    sessionEndpoint: script?.dataset.ollehSessionEndpoint || "https://api.olleh.ai/user/session-token"
   };
 
   if (w.__OLLEH_EMBED_ACTIVE__) return;
