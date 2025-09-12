@@ -146,7 +146,7 @@
       padding: '10px 12px', background: 'linear-gradient(90deg, rgb(5,120,190),rgb(7,152,228),rgb(9,180,255) )', color: '#fff',
       borderTopLeftRadius: '16px', borderTopRightRadius: '16px'
     });
-    var title = d.createElement('span'); title.textContent = 'Olleh AI Assistant';
+    var title = d.createElement('span'); title.textContent = script?.dataset.ollehTitle || 'Olleh AI Assistant';
     var closeBtn = d.createElement('button'); closeBtn.type = 'button'; closeBtn.setAttribute('aria-label', 'Close');
     Object.assign(closeBtn.style, { padding: '6px', border: '0', background: 'transparent', color: '#fff', cursor: 'pointer' });
     closeBtn.innerHTML = '<svg viewBox="0 0 640 640" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M504.6 148.5C515.9 134.9 514.1 114.7 500.5 103.4C486.9 92.1 466.7 93.9 455.4 107.5L320 270L184.6 107.5C173.3 93.9 153.1 92.1 139.5 103.4C125.9 114.7 124.1 134.9 135.4 148.5L278.3 320L135.4 491.5C124.1 505.1 125.9 525.3 139.5 536.6C153.1 547.9 173.3 546.1 184.6 532.5L320 370L455.4 532.5C466.7 546.1 486.9 547.9 500.5 536.6C514.1 525.3 515.9 505.1 504.6 491.5L361.7 320L504.6 148.5z"/></svg>';
