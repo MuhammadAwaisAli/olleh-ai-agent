@@ -7,7 +7,12 @@
     autostart: String(script?.dataset.ollehAutostart || "false") === "true",
     allow: script?.dataset.ollehAllow || "microphone; camera; autoplay",
     sandbox: script?.dataset.ollehSandbox || "allow-scripts allow-forms allow-same-origin allow-presentation",
-    iconSaurce: script?.dataset.ollehIconSource || "https://olleh.ai/assets/olleh-icon.svg"
+    iconSaurce: script?.dataset.ollehIconSource || "https://olleh.ai/assets/olleh-icon.svg",
+    title: script?.dataset.ollehTitle || "Olleh AI Assistant",
+
+    // client token and endpoint for session token
+    clientToken: script?.dataset.ollehClientToken || script?.dataset.ollehToken || "",
+    sessionEndpoint: script?.dataset.ollehSessionEndpoint || "https://olleh.ai/user/session-token"
   };
 
   if (w.__OLLEH_EMBED_ACTIVE__) return;
@@ -37,104 +42,73 @@
   btn.onpointerdown = function () { btn.style.transform = 'scale(1.06) rotate(6deg)'; };
   btn.onpointerup = function () { btn.style.transform = 'scale(1)'; };
   btn.onclick = toggleModal;
-  // btn.innerHTML = '<svg viewBox="0 0 640 640" width="28" height="28" fill="currentColor" aria-hidden="true"><path d="M320 64C267 64 224 107 224 160L224 288C224 341 267 384 320 384C373 384 416 341 416 288L416 160C416 107 373 64 320 64zM176 248C176 234.7 165.3 224 152 224C138.7 224 128 234.7 128 248L128 288C128 385.9 201.3 466.7 296 478.5L296 528L248 528C234.7 528 224 538.7 224 552C224 565.3 234.7 576 248 576L392 576C405.3 576 416 565.3 416 552C416 538.7 405.3 528 392 528L344 528L344 478.5C438.7 466.7 512 385.9 512 288L512 248C512 234.7 501.3 224 488 224C474.7 224 464 234.7 464 248L464 288C464 367.5 399.5 432 320 432C240.5 432 176 367.5 176 288L176 248z"/></svg>';
-  
-var base = new URL(script.src, location.href);
-base.pathname = base.pathname.replace(/[^/]+$/, ""); // remove filename from path
 
-// use data-olleh-icon-source if provided, else cfg.iconSaurce, else a file next to your script
-var iconUrl = script?.dataset.ollehIconSource
-  || cfg.iconSaurce
-  || new URL("olleh-mic.svg", base).href;
+  // icon from same repo or attribute
+  var base = new URL(script.src, location.href);
+  base.pathname = base.pathname.replace(/[^/]+$/, "");
+  var iconUrl = script?.dataset.ollehIconSource
+    || cfg.iconSaurce
+    || new URL("olleh-mic.svg", base).href;
+  btn.innerHTML = '<img src="' + iconUrl + '" alt="" aria-hidden="true" style="width:35px;height:35px;display:block;pointer-events:none;" />';
+  btn.className = (btn.className ? btn.className + ' ' : '') + 'olleh-mic-btn';
 
-// swap mic to your svg file, only markup change, logic unchanged
-btn.innerHTML = '<img src="' + iconUrl + '" alt="" aria-hidden="true" ' +
-                'style="width:35px;height:35px;display:block;pointer-events:none;" />';
-  // give the button a class for styling
-btn.className = (btn.className ? btn.className + ' ' : '') + 'olleh-mic-btn';
-
-
-
-
-  // give the button a class for styling
-btn.className = (btn.className ? btn.className + ' ' : '') + 'olleh-mic-btn';
-
-// inject beat animation styles once
-if (!d.getElementById('olleh-mic-anim')) {
-  var st = d.createElement('style');
-  st.id = 'olleh-mic-anim';
-  st.textContent = `
-    .olleh-mic-btn{ position:fixed; } /* keeps existing inline position, just a safety */
-    .olleh-mic-btn::after{
-      content:"";
-      position:absolute;
-      inset:-6px;
-      border-radius:9999px;
-      pointer-events:none;
-      box-shadow: 0 0 0 0 rgba(59,130,246,0.55);
-animation: ollehBeat 1.6s ease-out infinite;
-    }
-    @keyframes ollehBeat{
-      0%   { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.55); }
-      60%  { transform:scale(1.08); box-shadow:0 0 0 14px rgba(59,130,246,0.00); }
-      100% { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.00); }
-    }
-  `;
-  d.head.appendChild(st);
-}
+  // beat animation styles
+  if (!d.getElementById('olleh-mic-anim')) {
+    var st = d.createElement('style');
+    st.id = 'olleh-mic-anim';
+    st.textContent = '\
+      .olleh-mic-btn{ position:fixed; }\
+      .olleh-mic-btn::after{\
+        content:"";\
+        position:absolute;\
+        inset:-6px;\
+        border-radius:9999px;\
+        pointer-events:none;\
+        box-shadow:0 0 0 0 rgba(59,130,246,0.55);\
+        animation:ollehBeat 1.6s ease-out infinite;\
+      }\
+      @keyframes ollehBeat{\
+        0%   { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.55); }\
+        60%  { transform:scale(1.08); box-shadow:0 0 0 14px rgba(59,130,246,0.00); }\
+        100% { transform:scale(1);    box-shadow:0 0 0 0   rgba(59,130,246,0.00); }\
+      }';
+    d.head.appendChild(st);
+  }
 
   d.body.appendChild(btn);
 
-  // caption under the mic, plain text
+  // caption under the mic
   var cap = d.createElement('div');
   cap.textContent = 'Powered by Olleh AI';
   Object.assign(cap.style, {
     position: 'fixed',
-    bottom: '4px',                 // sits under the mic
-    fontSize: '10px',
+    bottom: '4px',
     marginBottom: '4px',
+    fontSize: '10px',
     lineHeight: '1',
     color: 'rgba(0,0,0,0.75)',
     userSelect: 'none',
-    pointerEvents: 'none',         // never blocks clicks
+    pointerEvents: 'none',
     zIndex: '2147483000'
   });
   d.body.appendChild(cap);
-//   function positionCaption(){
-//   // mic button box, accurate even with the pulse ring
-//   var b = btn.getBoundingClientRect();
-//   var capRect = cap.getBoundingClientRect();
 
-//   // center under mic
-//   var left = b.left + b.width / 2 - capRect.width / 2;
-//   left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
-//   cap.style.left = left + 'px';
+  function positionCaption(){
+    var b = btn.getBoundingClientRect();
+    var capRect = cap.getBoundingClientRect();
 
-//   // sit just below the mic, small gap
-//   var gap = 6; // px
-//   var bottom = w.innerHeight - (b.top + b.height) + gap;
-//   cap.style.bottom = bottom + 'px';
-// }
-function positionCaption(){
-  var b = btn.getBoundingClientRect();
-  var capRect = cap.getBoundingClientRect();
+    var left = b.left + b.width / 2 - capRect.width / 2;
+    left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
+    cap.style.left = left + 'px';
 
-  // center horizontally
-  var left = b.left + b.width / 2 - capRect.width / 2;
-  left = Math.max(8, Math.min(left, w.innerWidth - capRect.width - 8));
-  cap.style.left = left + 'px';
-
-  if (isOpen) {
-    // keep your current good placement when open
-    var gap = 16;
-    cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
-  } else {
-    // move a bit more down under the icon
-    var offsetDown = 16;   // try 12, increase to 14 or 16 if you want lower
-    cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
+    if (isOpen) {
+      var gap = 16;
+      cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - gap)) + 'px'; // fixed var name
+    } else {
+      var offsetDown = 16;
+      cap.style.bottom = Math.max(4, (w.innerHeight - b.bottom - offsetDown)) + 'px';
+    }
   }
-}
-
 
   positionCaption();
   w.addEventListener('resize', positionCaption);
@@ -151,15 +125,15 @@ function positionCaption(){
   var modal = d.createElement('div');
   modal.setAttribute('role', 'dialog');
   modal.setAttribute('aria-modal', 'true');
-  modal.setAttribute('aria-label', 'Olleh AI Assistant');
+  modal.setAttribute('aria-label', cfg.title);
   modal.tabIndex = -1;
   Object.assign(modal.style, {
     position: 'fixed', right: '16px', bottom: '96px', width: '22rem', maxWidth: 'calc(100vw - 24px)',
     maxHeight: '80vh',
-    background: 'transparent',      // no white background
+    background: 'transparent',
     borderRadius: '16px',
     boxShadow: '0 20px 50px rgba(0,0,0,0.25)',
-    border: '0',                    // remove border
+    border: '0',
     overflow: 'hidden',
     transform: 'translateY(24px)', opacity: '0',
     transition: 'transform 200ms ease, opacity 200ms ease', zIndex: '2147483000'
@@ -173,7 +147,7 @@ function positionCaption(){
     padding: '10px 12px', background: 'linear-gradient(90deg, rgb(5,120,190),rgb(7,152,228),rgb(9,180,255) )', color: '#fff',
     borderTopLeftRadius: '16px', borderTopRightRadius: '16px'
   });
-  var title = d.createElement('span'); title.textContent = 'Olleh AI Assistant';
+  var title = d.createElement('span'); title.textContent = cfg.title;
   var closeBtn = d.createElement('button'); closeBtn.type = 'button'; closeBtn.setAttribute('aria-label', 'Close');
   Object.assign(closeBtn.style, { padding: '6px', border: '0', background: 'transparent', color: '#fff', cursor: 'pointer' });
   closeBtn.innerHTML = '<svg viewBox="0 0 640 640" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M504.6 148.5C515.9 134.9 514.1 114.7 500.5 103.4C486.9 92.1 466.7 93.9 455.4 107.5L320 270L184.6 107.5C173.3 93.9 153.1 92.1 139.5 103.4C125.9 114.7 124.1 134.9 135.4 148.5L278.3 320L135.4 491.5C124.1 505.1 125.9 525.3 139.5 536.6C153.1 547.9 173.3 546.1 184.6 532.5L320 370L455.4 532.5C466.7 546.1 486.9 547.9 500.5 536.6C514.1 525.3 515.9 505.1 504.6 491.5L361.7 320L504.6 148.5z"/></svg>';
@@ -206,6 +180,105 @@ function positionCaption(){
 
   var isOpen = false, lastActive = null;
 
+  // session helpers
+  function getSessionId(){
+    try{
+      var key = "olleh_ai_session_id";
+      var sid = sessionStorage.getItem(key);
+      if (!sid) {
+        sid = (w.crypto && crypto.randomUUID) ? crypto.randomUUID()
+             : 'sid_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+        sessionStorage.setItem(key, sid);
+      }
+      return sid;
+    }catch(e){
+      return 'sid_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+    }
+  }
+
+  function stripTokenParam(urlStr){
+    try{
+      if(!urlStr) return "";
+      var u = new URL(urlStr, location.href);
+      u.searchParams.delete('token');
+      return u.origin + u.pathname + (u.search ? u.search : "");
+    }catch(e){
+      return urlStr;
+    }
+  }
+
+  function buildIframeUrl(baseUrl, token){
+    try{
+      var u = new URL(baseUrl || "https://olleh.ai/demo", location.href);
+      if (token) u.searchParams.set('token', token);
+      return u.toString();
+    }catch(e){
+      if (!baseUrl) return "https://olleh.ai/demo?token=" + encodeURIComponent(token || "");
+      var joiner = baseUrl.indexOf('?') > -1 ? '&' : '?';
+      return baseUrl + joiner + 'token=' + encodeURIComponent(token || "");
+    }
+  }
+
+function fetchSessionToken(endpoint, clientToken, sessionId){
+  return new Promise(function(resolve, reject){
+    if(!endpoint || !clientToken){
+      return reject(new Error('missing endpoint or client token'));
+    }
+
+    var payload = {
+      token: clientToken,
+      session_id: sessionId,
+      origin: location.origin || ''
+    };
+
+    var forceForm = String(script?.dataset.ollehSessionFormat || "").toLowerCase() === "form";
+
+    function postJson(){
+      return fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', "allow-origin": location.origin || "" },
+        body: JSON.stringify(payload)
+      });
+    }
+    function postForm(){
+      return fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(payload)
+      });
+    }
+    function handle(r){
+      if(!r.ok){
+        return r.text().then(function(t){
+          throw new Error('http ' + r.status + ', ' + t);
+        });
+      }
+      return r.json().then(function(j){
+        var t = j && j.data && j.data.token;  // your shape
+        if(!t) throw new Error('no token in response');
+        return String(t);
+      });
+    }
+
+    // try JSON first unless forced to form
+    var first = forceForm ? postForm() : postJson();
+
+    first.then(handle)
+      .then(resolve)
+      .catch(function(err){
+        // if JSON failed, try form once, this can avoid preflight on some setups
+        if(!forceForm){
+          postForm().then(handle).then(resolve).catch(function(err2){
+            reject(err2);
+          });
+        }else{
+          reject(err);
+        }
+      });
+  });
+}
+
+
   function openModal() {
     if (isOpen) return;
     isOpen = true;
@@ -214,11 +287,24 @@ function positionCaption(){
     scrim.style.pointerEvents = 'auto'; scrim.style.opacity = '1';
     modal.style.opacity = '1'; modal.style.transform = 'translateY(0)';
     d.body.style.overflow = 'hidden';
-    if (cfg.iframeSrc) iframe.src = cfg.iframeSrc;
+
+    var baseUrl = stripTokenParam(cfg.iframeSrc) || "https://olleh.ai/demo";
+    var sid = getSessionId();
+
+    fetchSessionToken(cfg.sessionEndpoint, cfg.clientToken, sid)
+      .then(function(tkn){
+        iframe.src = buildIframeUrl(baseUrl, tkn);
+      })
+      .catch(function(err){
+        console.warn('olleh session-token error', err && err.message ? err.message : err);
+        iframe.src = cfg.iframeSrc ? cfg.iframeSrc : buildIframeUrl(baseUrl, "");
+      });
+
     focusLater(modal);
     emit('open');
-     positionCaption();
+    positionCaption();
   }
+
   function closeModal() {
     if (!isOpen) return;
     isOpen = false;
@@ -228,28 +314,27 @@ function positionCaption(){
     d.body.style.overflow = '';
     try { lastActive && lastActive.focus && lastActive.focus(); } catch (e) { }
     emit('close');
-     positionCaption();
+    positionCaption();
   }
+
   function toggleModal() { isOpen ? closeModal() : openModal(); }
   function focusLater(el) { setTimeout(function () { try { el.focus(); } catch (e) { } }, 0); }
 
-  // outside click, keep modal open
+  // outside click blocked
   d.addEventListener('mousedown', function (e) {
     if (!isOpen) return;
     if (!modal.contains(e.target) && !btn.contains(e.target)) {
       e.preventDefault();
       e.stopPropagation();
-      // do nothing, modal stays open
     }
   });
 
-  // disable Esc close
+  // Esc blocked
   d.addEventListener('keydown', function (e) {
     if (!isOpen) return;
     if (e.key === 'Escape') {
       e.preventDefault();
       e.stopPropagation();
-      // do nothing, modal stays open
     }
   });
 
