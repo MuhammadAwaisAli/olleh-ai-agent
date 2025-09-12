@@ -9,6 +9,7 @@
     sandbox: script?.dataset.ollehSandbox || "allow-scripts allow-forms allow-same-origin allow-presentation",
     iconSaurce: script?.dataset.ollehIconSource || "https://olleh.ai/assets/olleh-icon.svg",
     title: script?.dataset.ollehTitle || "Olleh AI Assistant",
+    headerColor: script?.dataset.ollehHeaderColor || "linear-gradient(90deg, rgb(5,120,190),rgb(7,152,228),rgb(9,180,255))",
 
     // client token and endpoint for session token
     clientToken: script?.dataset.ollehClientToken || script?.dataset.ollehToken || "",
@@ -144,7 +145,7 @@
   var header = d.createElement('div');
   Object.assign(header.style, {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    padding: '10px 12px', background: 'linear-gradient(90deg, rgb(5,120,190),rgb(7,152,228),rgb(9,180,255) )', color: '#fff',
+    padding: '10px 12px', background: cfg.headerColor, color: '#fff',
     borderTopLeftRadius: '16px', borderTopRightRadius: '16px'
   });
   var title = d.createElement('span'); title.textContent = cfg.title;
