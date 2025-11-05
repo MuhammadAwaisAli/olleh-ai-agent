@@ -286,6 +286,7 @@
       btn.setAttribute('aria-label', 'Close Olleh AI Assistant');
       scrim.style.pointerEvents = 'auto'; scrim.style.opacity = '1';
       modal.style.opacity = '1'; modal.style.transform = 'translateY(0)';
+      modal.style.pointerEvents = 'auto';
       d.body.style.overflow = 'hidden';
   
       var baseUrl = stripTokenParam(cfg.iframeSrc) || "https://phpstack-508481-5298655.cloudwaysapps.com";
@@ -311,6 +312,7 @@
       btn.setAttribute('aria-label', 'Open Olleh AI Assistant');
       scrim.style.opacity = '0'; scrim.style.pointerEvents = 'none';
       modal.style.opacity = '0'; modal.style.transform = 'translateY(24px)';
+      modal.style.pointerEvents = 'none';
       d.body.style.overflow = '';
       try { lastActive && lastActive.focus && lastActive.focus(); } catch (e) { }
       emit('close');
